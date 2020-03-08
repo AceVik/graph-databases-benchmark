@@ -1,3 +1,5 @@
+import { benchmark } from './utils';
 
-
-console.log('WIP');
+benchmark('Test benchmark', async () => {
+    for(let i = 0; i < 9999999999; i++);
+});
