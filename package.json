@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint 'src/**/*.ts'",
     "tsc": "tsc --noEmit --project .",
-    "test": "TS_TEST=true jest",
     "dev": "ts-node-dev src/index.ts",
     "start": "ts-node --files src/index.ts"
   },
