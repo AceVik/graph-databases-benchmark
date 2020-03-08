@@ -1,0 +1,24 @@
+{
+  "name": "graph-databases-benchmark",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint 'src/**/*.ts'",
+    "tsc": "tsc --noEmit --project .",
+    "test": "TS_TEST=true jest",
+    "dev": "ts-node-dev src/index.ts",
+    "start": "ts-node --files src/index.ts"
+  },
+  "repository": "https://github.com/AceVik/graph-databases-benchmark.git",
+  "author": "AceVik <mail@acevik.de>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "arangojs": "^6.13.0",
+    "orientjs": "^3.0.10",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.0",
+    "@types/orientjs": "^3.0.10"
+  }
+}
