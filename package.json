@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^13.9.0",
-    "@types/orientjs": "^3.0.10"
+    "@types/orientjs": "^3.0.10",
+    "ts-node": "^8.6.2"
   }
 }
