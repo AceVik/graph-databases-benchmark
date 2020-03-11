@@ -1,4 +1,6 @@
 
+export * from './decorator';
+
 import format from 'date-fns/format';
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
