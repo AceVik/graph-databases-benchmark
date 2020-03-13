@@ -1,8 +1,10 @@
-
-export * from './decorator';
+export * from './types';
+export * from './entities';
+export * from './builders';
 
 import format from 'date-fns/format';
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
+import { MeasurementResult } from './types';
 
 // returns duration formated as: h:m:s.ms
 export function formatDuration(duration: number): string {
@@ -20,8 +22,20 @@ export function $log(text: string, ts: Date = new Date()) {
     console.log(`[${format(ts, 'yyyy-MM-dd HH:mm:ss.SS')}] ${text}`);
 }
 
-export async function benchmark(name: string, run: Function): Promise<any> {
-    $log(`Start of "${name}"`);
+
+const benchmarks = new Map<string, MeasurementResult[]>();
+let currentBenchmark: string | undefined = undefined;
+
+export async function benchmark(name: string, run: Function): Promise<MeasurementResult[]> {
+    currentBenchmark = name;
+    benchmarks.set(name, []);
+    await run();
+    currentBenchmark = undefined;
+    return benchmarks.get(name)!;
+}
+
+export async function measure(name: string, run: Function, verbose?: boolean): Promise<MeasurementResult> {
+    verbose !== false && $log(`Start of "${name}"`);
 
     const start = new Date();
 
@@ -30,12 +44,18 @@ export async function benchmark(name: string, run: Function): Promise<any> {
     const end = new Date();
     const duration = differenceInMilliseconds(end, start);
 
-    $log(`"${name}" finished in ${formatDuration(duration)}`, end);
+    verbose !== false && $log(`"${name}" finished in ${formatDuration(duration)}`, end);
 
-    return {
+    const result = {
         name,
         start,
         end,
         duration
     };
+
+    if (currentBenchmark) {
+        benchmarks.get(currentBenchmark)?.push(result);
+    }
+
+    return result;
 }

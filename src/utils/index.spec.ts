@@ -1,7 +1,8 @@
 import {
     $log,
     formatDuration,
-    benchmark
+    benchmark,
+    measure
 } from './index';
 
 console.log = jest.fn();
@@ -35,18 +36,27 @@ describe('formatDuration function', () => {
     });
 });
 
-describe('benchmark function', () => {
+describe('measure function', () => {
     it('should be a function', async () => {
-        expect(typeof benchmark).toBe('function');
+        expect(typeof measure).toBe('function');
     });
 
     it('should return a promise of the right type', async () => {
-        const result = await benchmark('benchmark test', () => { });
+        const measureName = 'measure test';
+        const result = await measure(measureName, () => { });
 
+        
         expect(typeof result).toBe('object');
+        expect(result.name).toBe(measureName);
         expect(result.start).toBeInstanceOf(Date);
         expect(result.end).toBeInstanceOf(Date);
         expect(typeof result.duration).toBe('number');
         expect(result.duration).toBeGreaterThanOrEqual(0.0);
+    });
+});
+
+describe('benchmark function', () => {
+    it('should be a function', async () => {
+        expect(typeof benchmark).toBe('function');
     });
 });

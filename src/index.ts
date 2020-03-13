@@ -1,8 +1,15 @@
-import { benchmark } from './utils';
-import { ArangoDB } from './benchmark_drivers/ArangoDB';
+import { BenchmarkData, generateAddresses } from './utils';
+import runArangoBenchmark from './arango_benchmark';
 
-/*benchmark('Test benchmark', async () => {
-    for(let i = 0; i < 9999999999; i++);
-});*/
+const data: BenchmarkData = {
+    accounts: [],
+    profiles: [],
+    addresses: [],
+    relationships: []
+};
 
-const driver = new ArangoDB();
+const addrs = generateAddresses(10);
+console.log(addrs);
+
+runArangoBenchmark(data);
+// runOrientBenchmark(data);
