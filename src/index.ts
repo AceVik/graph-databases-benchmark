@@ -9,7 +9,6 @@ const data: BenchmarkData = {
 };
 
 const addrs = generateAddresses(10);
-console.log(addrs);
 
 runArangoBenchmark(data);
 // runOrientBenchmark(data);

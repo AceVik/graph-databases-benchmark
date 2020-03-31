@@ -1,8 +1,11 @@
 import {
     rnd,
     rndStr,
-    generateAddresses
+    rndDate,
+    generateAddresses,
+    generateAccounts
 } from './builders';
+import isDate from 'date-fns/isDate';
 
 console.log = jest.fn();
 
@@ -67,6 +70,40 @@ describe('rndStr function', () => {
     });
 });
 
+describe('rndDate function', () => {
+    it('should generate a date between 2000-02-20 and 2000-02-25', async () => {
+        
+        const start = new Date('2000-02-20');
+        const end = new Date('2000-02-25');
+
+        const startTS = start.getTime();
+        const endTS = end.getTime();
+
+        for (let i = 0; i < 100; i++) {
+            const date = rndDate(start, end);
+            const dateTS = date.getTime();
+
+            expect(dateTS).toBeGreaterThanOrEqual(startTS);
+            expect(dateTS).toBeLessThanOrEqual(endTS);
+        }
+    });
+
+    it('should generate at least 90% of different results on multiple calls', async () => {
+
+        const runs = 1000;
+        const dates = {};
+
+        const start = new Date('1992-01-01');
+        const end = new Date('2020-01-01');
+
+        for (let i = 0; i < runs; i++) {
+            dates[Math.round(rndDate(start, end).getTime() * 0.001)] = true;
+        }
+
+        expect(Object.keys(dates).length).toBeGreaterThanOrEqual(Math.round(runs * 0.9));
+    });
+});
+
 describe('generateAddresses function', () => {
     it('should generate n address objects with random values', async () => {
         const addrs = generateAddresses(10);
@@ -84,5 +121,36 @@ describe('generateAddresses function', () => {
                     .length
             ).toBeGreaterThanOrEqual(1);
         }
+    });
+});
+
+describe('generateAccounts function', () => {
+    it('should generate n account objects with random values', async () => {
+        const accs = generateAccounts(50);
+        const types = ['string', 'undefined'];
+        
+        let undefinedTokenExists = false;
+        let definedTokenExists = false;
+
+        for (let acc of accs) {
+            expect(typeof acc).toBe('object');
+
+            expect(typeof acc.mail).toBe('string');
+            expect(acc.mail).toMatch(/^\w+(\.\w+)?@\w+\.\w+$/is);
+
+            expect(typeof acc.password).toBe('string');
+
+            expect(types.includes(typeof acc.token)).toBeTruthy();
+
+            if (acc.token) {
+                definedTokenExists = true;
+            } else {
+                undefinedTokenExists = true;
+            }
+
+            expect(isDate(acc.createdAt)).toBeTruthy();
+        }
+
+        expect(definedTokenExists && undefinedTokenExists).toBeTruthy();
     });
 });

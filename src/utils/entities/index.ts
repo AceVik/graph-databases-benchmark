@@ -1,7 +1,7 @@
 export interface Account {
     mail: string;
     password: string;
-    token: string;
+    token?: string;
     createdAt: Date;
 }
 

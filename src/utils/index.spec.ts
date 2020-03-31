@@ -59,4 +59,6 @@ describe('benchmark function', () => {
     it('should be a function', async () => {
         expect(typeof benchmark).toBe('function');
     });
+
+    // TODO: To be finished
 });
