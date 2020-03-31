@@ -6,12 +6,12 @@ export interface Account {
 }
 
 export interface Profile {
-    account: Account;
+    accountIndex: number;
     firstname?: string;
     lastname?: string;
     birthdate?: Date;
     gender?: 'male' | 'female';
-    address?: Address;
+    addressIndex?: number;
 }
 
 export interface Address {

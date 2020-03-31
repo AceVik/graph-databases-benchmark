@@ -1,7 +1,8 @@
 
 import {
     Address,
-    Account
+    Account,
+    Profile
 } from './entities';
 
 
@@ -48,15 +49,43 @@ export function generateAddresses(amount: number): Address[] {
 
 export function generateAccounts(amount: number): Account[] {
   const accounts: Account[] = [];
+  const [ startDate, endDate ] = [ new Date('1992-01-01'), new Date() ];
 
-    for (let i = 0; i < amount; i++) {
-      accounts.push({
-        mail: rndStr(3, 24) + (rnd(0, 8) === 0 ? rndStr(3, 24) : '') + '@' + rndStr(2, 8) + '.' + rndStr(1, 3),
-        password: rndStr(64, 64),
-        token: rnd(0, 3) !== 0 ? undefined : rndStr(128, 128),
-        createdAt: rndDate(new Date('1992-01-01'), new Date())
-      });
+  for (let i = 0; i < amount; i++) {
+    accounts.push({
+      mail: rndStr(3, 24) + (rnd(0, 8) === 0 ? rndStr(3, 24) : '') + '@' + rndStr(2, 8) + '.' + rndStr(1, 3),
+      password: rndStr(64, 64),
+      token: rnd(0, 3) !== 0 ? undefined : rndStr(128, 128),
+      createdAt: rndDate(startDate, endDate)
+    });
+  }
+
+  return accounts;
+}
+
+export function generateProfiles(accountsAmount: number, addressesAmount: number): Profile[] {
+  const profiles: Profile[] = [];
+
+  const getRndAddrIdx = (): number => rnd(0, addressesAmount - 1);
+
+  let addrIdx = getRndAddrIdx();
+
+  const [ startDate, endDate ] = [ new Date('1992-01-01'), new Date('2020-01-01') ];
+
+  for (let accIdx = 0; accIdx < accountsAmount; accIdx++) {
+    if (rnd(0, 8) !== 0) {
+      addrIdx = getRndAddrIdx();
     }
 
-    return accounts;
+    profiles.push({
+      accountIndex: accIdx,
+      birthdate: rnd(0, 10) === 0 ? undefined : rndDate(startDate, endDate),
+      firstname: rnd(0, 10) === 0 ? undefined : rndStr(4, 12),
+      lastname: rnd(0, 10) === 0 ? undefined : rndStr(4, 12),
+      gender: rnd(0, 10) === 0 ? undefined : rnd(0, 1) === 0 ? 'male' : 'female',
+      addressIndex: rnd(0, 10) === 0 ? undefined : addrIdx
+    });
+  }
+
+  return profiles;
 }

@@ -3,7 +3,8 @@ import {
     rndStr,
     rndDate,
     generateAddresses,
-    generateAccounts
+    generateAccounts,
+    generateProfiles
 } from './builders';
 import isDate from 'date-fns/isDate';
 
@@ -151,6 +152,65 @@ describe('generateAccounts function', () => {
             expect(isDate(acc.createdAt)).toBeTruthy();
         }
 
-        expect(definedTokenExists && undefinedTokenExists).toBeTruthy();
+        expect(definedTokenExists).toBeTruthy();
+        expect(undefinedTokenExists).toBeTruthy();
+    });
+});
+
+describe('generateProfiles function', () => {
+    it('should generate n profiles objects with random values', async () => {
+        const accs = generateAccounts(50);
+        const addrs = generateAddresses(50);
+
+        const profiles = generateProfiles(accs.length, addrs.length);
+
+        const types = ['string', 'undefined'];
+
+        let [ definedAddressesExist, undefinedAddressesExist ] = [ false, false ];
+        const foundAddresses: {[addressIndex: number]: number} = {};
+
+        for (let profile of profiles) {
+            expect(typeof profile).toBe('object');
+
+            expect(profile.accountIndex).toBeGreaterThanOrEqual(0);
+            expect(profile.accountIndex).toBeLessThan(accs.length);
+
+            if (profile.addressIndex === undefined) {
+                undefinedAddressesExist = true;
+            } else {
+                expect(profile.addressIndex).toBeGreaterThanOrEqual(0);
+                expect(profile.addressIndex).toBeLessThan(accs.length);
+
+                if (!foundAddresses[profile.addressIndex]) {
+                    foundAddresses[profile.addressIndex] = 1;
+                } else {
+                    foundAddresses[profile.addressIndex]++;
+                }
+
+                definedAddressesExist = true;
+            }
+
+            expect(types.includes(typeof profile.firstname)).toBeTruthy();
+            expect(types.includes(typeof profile.lastname)).toBeTruthy();
+            expect(types.includes(typeof profile.gender)).toBeTruthy();
+            
+            if (profile.birthdate) {
+                expect(isDate(profile.birthdate)).toBeTruthy();
+            }
+        }
+
+        expect(definedAddressesExist).toBeTruthy();
+        expect(undefinedAddressesExist).toBeTruthy();
+
+        let multipleProfilesWithSameAddressExist = false;
+
+        for (let addrIdx of Object.keys(foundAddresses)) {
+            if (foundAddresses[addrIdx] > 1) {
+                multipleProfilesWithSameAddressExist = true;
+                break;
+            }
+        }
+
+        expect(multipleProfilesWithSameAddressExist).toBeTruthy();
     });
 });
