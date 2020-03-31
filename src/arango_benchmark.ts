@@ -5,12 +5,13 @@ import {
     BenchmarkData,
     Account,
     Profile,
+    ProfileCollection,
     Address,
 } from './utils';
 import {
     Database,
     DocumentCollection,
-    EdgeCollection
+    EdgeCollection,
 } from 'arangojs';
 import * as $ from './compareableMeasurements';
 
@@ -31,8 +32,12 @@ export default async function(data: BenchmarkData) {
         const addressesCollectionName = 'addresses';
 
         let accountsCollection: DocumentCollection<Account>;
-        let profilesCollection: DocumentCollection<Profile>;
         let addressesCollection: DocumentCollection<Address>;
+        let profilesCollection: DocumentCollection<ProfileCollection>;
+
+        const accountResponses: any[] = [];
+        const addressResponses: any[] = [];
+        const profileResponses: any[] = [];
 
         await measure('Create collections', async () => {
             await Promise.all([
@@ -42,31 +47,54 @@ export default async function(data: BenchmarkData) {
                 })(),
 
                 (async () => {
+                    addressesCollection = await con.collection(addressesCollectionName);
+                    await addressesCollection.create();
+                })(),
+                
+                (async () => {
                     profilesCollection = await con.collection(profilesCollectionName);
                     await profilesCollection.create();
                 })(),
-
-                (async () => {
-                    addressesCollection = await con.collection(addressesCollectionName);
-                    await addressesCollection.create();
-                })()
             ]);
         });
 
-        await measure('Insert benchmark data', async () => {
-            const doc = await accountsCollection.save({
-                mail: 'test@acevik.de',
-                password: 'qwer66tzui',
-                createdAt: new Date(),
-                token: 'sdgfdsfgdfhgdhgh'
-            });
-
-            console.log(doc);
+        await measure('Insert accounts in-turn', async () => {
+            for (let acc of data.accounts) {
+                const rsp = await accountsCollection.save(acc);
+                accountResponses.push(rsp);
+            }
         });
 
+        console.log(accountResponses[0]);
+
+        await measure('Insert addresses in-turn', async () => {
+            for (let addr of data.addresses) {
+                const rsp = await addressesCollection.save(addr);
+                addressResponses.push(rsp);
+            }
+        });
+
+        console.log(addressResponses[0]);
+
+        await measure('Insert profiles in-turn', async () => {
+            for (let profile of data.profiles) {
+                const rsp = await profilesCollection.save({
+                    account: accountResponses[profile.accountIndex],
+                    firstname: profile.firstname,
+                    lastname: profile.lastname,
+                    gender: profile.gender,
+                    birthdate: profile.birthdate,
+                    address: profile.addressIndex && addressResponses[profile.addressIndex]
+                });
+                profileResponses.push(rsp);
+            }
+        });
+
+        console.log(profileResponses[0]);
+
         await measure($.DropCreatedDatabase, async () => {
-            await con.useDatabase('_system');
-            await con.dropDatabase(databaseName)
+            // await con.useDatabase('_system');
+            // await con.dropDatabase(databaseName)
         });
     });
 }

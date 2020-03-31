@@ -5,8 +5,8 @@ import runArangoBenchmark from './arango_benchmark';
     let data: BenchmarkData = { accounts: [], addresses: [], profiles: [] };
 
     await measure('generate test data', async () => {
-        const accounts = generateAccounts(750000);
-        const addresses = generateAddresses(1250000);
+        const accounts = generateAccounts(10000);
+        const addresses = generateAddresses(15000);
     
         const profiles = generateProfiles(accounts.length, addresses.length);
     

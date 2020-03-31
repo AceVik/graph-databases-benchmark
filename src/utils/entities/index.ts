@@ -14,6 +14,15 @@ export interface Profile {
     addressIndex?: number;
 }
 
+export interface ProfileCollection {
+    account: string;
+    firstname?: string;
+    lastname?: string;
+    birthdate?: Date;
+    gender?: 'male' | 'female';
+    address?: string;
+}
+
 export interface Address {
     street?: string;
     zip?: string;
