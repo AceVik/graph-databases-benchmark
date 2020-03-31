@@ -1,19 +1,22 @@
-import { BenchmarkData, generateAddresses, generateAccounts, generateProfiles } from './utils';
+import { BenchmarkData, generateAddresses, generateAccounts, generateProfiles, measure } from './utils';
 import runArangoBenchmark from './arango_benchmark';
 
-const data: BenchmarkData = {
-    accounts: [],
-    profiles: [],
-    addresses: [],
-    relationships: []
-};
+(async () => {
+    let data: BenchmarkData = { accounts: [], addresses: [], profiles: [] };
 
-// const addrs = generateAddresses(10);
+    await measure('generate test data', async () => {
+        const accounts = generateAccounts(750000);
+        const addresses = generateAddresses(1250000);
+    
+        const profiles = generateProfiles(accounts.length, addresses.length);
+    
+        data = {
+            accounts,
+            addresses,
+            profiles
+        };
+    });
 
-const accs = generateAccounts(50);
-const addrs = generateAddresses(50);
-
-const profiles = generateProfiles(accs.length, addrs.length);
-
-runArangoBenchmark(data);
-// runOrientBenchmark(data);
+    runArangoBenchmark(data);
+    // runOrientBenchmark(data);
+})();

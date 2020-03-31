@@ -21,16 +21,17 @@ export interface Address {
     country?: string;
 }
 
-export interface Relationship {
-    personA: Profile;
-    personB: Profile;
-    type: 'friends' | 'couple' | 'related';
-    since: Date;
-}
-
 export interface BenchmarkData {
     accounts: Account[];
-    profiles: Profile[];
     addresses: Address[];
-    relationships: Relationship[];
+    profiles: Profile[];
+}
+
+export function serializeBenchmarkData(data: BenchmarkData, path: string) {
+    // TODO to be implemented
+}
+
+export function deserializeBenchmarkData(path: string): BenchmarkData {
+    // TODO to be implemented
+    return { accounts: [], addresses: [], profiles: [] };
 }

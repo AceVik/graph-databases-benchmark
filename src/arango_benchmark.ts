@@ -6,7 +6,6 @@ import {
     Account,
     Profile,
     Address,
-    Relationship
 } from './utils';
 import {
     Database,
@@ -30,12 +29,10 @@ export default async function(data: BenchmarkData) {
         const accountsCollectionName = 'accounts';
         const profilesCollectionName = 'profiles';
         const addressesCollectionName = 'addresses';
-        const relationshipsCollectionName = 'relationships';
 
         let accountsCollection: DocumentCollection<Account>;
         let profilesCollection: DocumentCollection<Profile>;
         let addressesCollection: DocumentCollection<Address>;
-        let relationshipsCollection: EdgeCollection<Relationship>;
 
         await measure('Create collections', async () => {
             await Promise.all([
@@ -52,11 +49,6 @@ export default async function(data: BenchmarkData) {
                 (async () => {
                     addressesCollection = await con.collection(addressesCollectionName);
                     await addressesCollection.create();
-                })(),
-
-                (async () => {
-                    relationshipsCollection = await con.edgeCollection(relationshipsCollectionName);
-                    await relationshipsCollection.create();
                 })()
             ]);
         });
