@@ -14,15 +14,6 @@ export interface Profile {
     addressIndex?: number;
 }
 
-export interface ProfileCollection {
-    account: string;
-    firstname?: string;
-    lastname?: string;
-    birthdate?: Date;
-    gender?: 'male' | 'female';
-    address?: string;
-}
-
 export interface Address {
     street?: string;
     zip?: string;
@@ -30,10 +21,16 @@ export interface Address {
     country?: string;
 }
 
+export interface Relation {
+    fromIndex: number;
+    toIndex: number;
+}
+
 export interface BenchmarkData {
     accounts: Account[];
     addresses: Address[];
     profiles: Profile[];
+    relations: Relation[];
 }
 
 export function serializeBenchmarkData(data: BenchmarkData, path: string) {
@@ -42,5 +39,5 @@ export function serializeBenchmarkData(data: BenchmarkData, path: string) {
 
 export function deserializeBenchmarkData(path: string): BenchmarkData {
     // TODO to be implemented
-    return { accounts: [], addresses: [], profiles: [] };
+    return { accounts: [], addresses: [], profiles: [], relations: [] };
 }

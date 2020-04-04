@@ -2,7 +2,8 @@
 import {
     Address,
     Account,
-    Profile
+    Profile,
+    Relation
 } from './entities';
 
 
@@ -88,4 +89,26 @@ export function generateProfiles(accountsAmount: number, addressesAmount: number
   }
 
   return profiles;
+}
+
+export function generateRelations(amount: number, profilesAmount: number): Relation[] {
+  const relations: Relation[] = [];
+  const getRndProfileIdx = (): number => rnd(0, profilesAmount - 1);
+
+  for (let i = 0; i < amount; i++) {
+    const fromIndex = getRndProfileIdx();
+    const toIndex = (() => {
+      do {
+        const idx = getRndProfileIdx();
+        if (idx !== fromIndex) {
+          return idx;
+        }
+      } while (true);
+    })();
+
+    relations.push({ fromIndex, toIndex });
+  }
+
+  return relations;
+
 }
