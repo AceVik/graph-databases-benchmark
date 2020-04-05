@@ -4,7 +4,7 @@ export * from './builders';
 
 import format from 'date-fns/format';
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
-import { MeasurementResult } from './types';
+import { MeasurementResult, BenchmarkResult } from './types';
 
 // returns duration formated as: h:m:s.ms
 export function formatDuration(duration: number): string {
@@ -26,20 +26,30 @@ export function $log(text: string, ts: Date = new Date()) {
 const benchmarks = new Map<string, MeasurementResult[]>();
 let currentBenchmark: string | undefined = undefined;
 
-export async function benchmark(name: string, run: Function, verbose?: boolean): Promise<MeasurementResult[]> {
+export async function benchmark(name: string, run: Function, verbose?: boolean): Promise<BenchmarkResult> {
     verbose !== false && $log(`Start benchmark "${name}"`);
 
     currentBenchmark = name;
     benchmarks.set(name, []);
+
+    const start = new Date();
+
     await run();
+
+    const end = new Date();
+    const duration = differenceInMilliseconds(end, start);
+
     currentBenchmark = undefined;
 
-    if (verbose !== false) {
-        const totalTime = benchmarks.get(name)!.map(v => v.duration).reduce((l, r) => l + r);
-        $log(`Benchmark "${name}" finished in ${formatDuration(totalTime)}`);
-    }
+    verbose !== false && $log(`Benchmark "${name}" finished in ${formatDuration(duration)}`);
 
-    return benchmarks.get(name)!;
+    return {
+        name,
+        duration,
+        start,
+        end,
+        measurementResults: benchmarks.get(name)!
+    };
 }
 
 export async function measure(name: string, run: Function, verbose?: boolean): Promise<MeasurementResult> {

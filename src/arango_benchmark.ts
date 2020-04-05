@@ -59,7 +59,7 @@ export default async function(data: BenchmarkData) {
         let addressResponses: BasicResponse[] = [];
         let profileResponses: BasicResponse[] = [];
 
-        await measure('Create collections', async () => {
+        await measure('Create data containers', async () => {
             await Promise.all([
                 (async () => {
                     accountsCollection = await con.collection(accountsCollectionName);

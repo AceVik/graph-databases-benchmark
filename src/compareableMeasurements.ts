@@ -1,5 +1,5 @@
 
-export const CreateNewDatabase = 'Create a new database';
+export const CreateNewDatabase = 'Create new database';
 export const DropCreatedDatabase = 'Drop created database';
 
 export const CreateNewCollection = 'Create a new collection';

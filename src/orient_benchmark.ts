@@ -2,15 +2,12 @@ import {
     benchmark,
     measure,
     
-    BenchmarkData,
-    Account,
-    Address,
+    BenchmarkData
 } from './utils';
 import {
     OrientDBClient,
     ORID,
 } from 'orientjs';
-import format from 'date-fns/format';
 
 import * as $ from './compareableMeasurements';
 
@@ -49,7 +46,7 @@ export default async function(data: BenchmarkData) {
         let addressResponses: any[] = [];
         let profileResponses: any[] = [];
 
-        await measure('Create classes', async () => {
+        await measure('Create data containers', async () => {
             await Promise.all([
                 (async () => {
                     await sess.exec(`CREATE CLASS ${accountsClassName} EXTENDS V`);

@@ -5,3 +5,7 @@ export interface MeasurementResult {
     end: Date;
     duration: number;
 }
+
+export interface BenchmarkResult extends MeasurementResult {
+    measurementResults: MeasurementResult[];
+}

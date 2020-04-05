@@ -1,6 +1,23 @@
-import { BenchmarkData, generateAddresses, generateAccounts, generateProfiles, generateRelations, measure } from './utils';
+import { BenchmarkData, generateAddresses, generateAccounts, generateProfiles, generateRelations, measure, BenchmarkResult, formatDuration } from './utils';
 import runArangoBenchmark from './arango_benchmark';
 import runOrientBenchmark from './orient_benchmark';
+
+
+const printResultsTable = (...results: BenchmarkResult[]) => {
+    const benchmarks: {[name: string]: {[name: string]: string}} = {};
+
+    for (let r of results) {
+        const propName = `${r.name} (${formatDuration(r.duration)} ms)`;
+        benchmarks[propName] = {};
+
+        for (let m of r.measurementResults) {
+            benchmarks[propName][m.name] = formatDuration(m.duration) + ' ms';
+        }
+    }
+
+    console.table(benchmarks);
+};
+
 
 (async () => {
     let data: BenchmarkData = { accounts: [], addresses: [], profiles: [], relations: [] };
@@ -23,4 +40,6 @@ import runOrientBenchmark from './orient_benchmark';
 
     const arangoResults = await runArangoBenchmark(data);
     const orientResults = await runOrientBenchmark(data);
+
+    printResultsTable(arangoResults, orientResults);
 })();
