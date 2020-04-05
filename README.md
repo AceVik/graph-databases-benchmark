@@ -15,7 +15,10 @@ JS benchmark of popular graph databases. (At first ArangoDB and OrientDB)
   - Use `yarn test` to run tests
 
 
-### Example (Windows Docker Containers: 8 CPUs, 2GB RAM, 4GB SWAP; System: Ryzen 3900x CPU 12x2@4.2GHz, 2xSATA SSD in RAID 0)
+### Example
+#### (Windows Docker Containers: 8 CPUs, 2GB RAM, 4GB SWAP; System: Ryzen 3900x CPU 12x2@4.2GHz, 2xSATA SSD in RAID 0)
+#### ArangoDB: 3.6.2 (https://hub.docker.com/_/arangodb)
+#### OrientDB: 3.0.30 (https://hub.docker.com/_/orientdb)
 ```
 [2020-04-05 22:38:21.06] Measure "generate test data"
 [2020-04-05 22:38:21.23] ✓ "generate test data" finished in 0:0:0.170
