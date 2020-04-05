@@ -34,7 +34,7 @@ interface BasicResponse {
 };
 
 export default async function(data: BenchmarkData) {
-    await benchmark('ArangoDB', async () => {
+    return await benchmark('ArangoDB', async () => {
         const con = new Database('tcp://127.0.0.1:8529');
         await con.useBasicAuth('root', 'graphdbbenchmark');
     

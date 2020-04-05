@@ -21,6 +21,6 @@ import runOrientBenchmark from './orient_benchmark';
         };
     });
 
-    // await runArangoBenchmark(data);
-    await runOrientBenchmark(data);
+    const arangoResults = await runArangoBenchmark(data);
+    const orientResults = await runOrientBenchmark(data);
 })();

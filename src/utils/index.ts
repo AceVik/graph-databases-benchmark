@@ -26,16 +26,26 @@ export function $log(text: string, ts: Date = new Date()) {
 const benchmarks = new Map<string, MeasurementResult[]>();
 let currentBenchmark: string | undefined = undefined;
 
-export async function benchmark(name: string, run: Function): Promise<MeasurementResult[]> {
+export async function benchmark(name: string, run: Function, verbose?: boolean): Promise<MeasurementResult[]> {
+    verbose !== false && $log(`Start benchmark "${name}"`);
+
     currentBenchmark = name;
     benchmarks.set(name, []);
     await run();
     currentBenchmark = undefined;
+
+    if (verbose !== false) {
+        const totalTime = benchmarks.get(name)!.map(v => v.duration).reduce((l, r) => l + r);
+        $log(`Benchmark "${name}" finished in ${formatDuration(totalTime)}`);
+    }
+
     return benchmarks.get(name)!;
 }
 
 export async function measure(name: string, run: Function, verbose?: boolean): Promise<MeasurementResult> {
-    verbose !== false && $log(`Start of "${name}"`);
+    const prefix = currentBenchmark ? `\t` : '';
+
+    verbose !== false && $log(`${prefix}Measure "${name}"`);
 
     const start = new Date();
 
@@ -44,7 +54,7 @@ export async function measure(name: string, run: Function, verbose?: boolean): P
     const end = new Date();
     const duration = differenceInMilliseconds(end, start);
 
-    verbose !== false && $log(`"${name}" finished in ${formatDuration(duration)}`, end);
+    verbose !== false && $log(`${prefix}✓ "${name}" finished in ${formatDuration(duration)}`, end);
 
     const result = {
         name,
